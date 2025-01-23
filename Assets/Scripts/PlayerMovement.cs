@@ -13,6 +13,8 @@ public class PlayerMovement : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private Animator animator; // Reference to Animator
 
+    private const float movementThreshold = 0.2f; // Threshold for detecting intentional movement
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D component
@@ -30,17 +32,22 @@ public class PlayerMovement : MonoBehaviour
         if (hInput > 0)
         {
             spriteRenderer.flipX = false; // Facing right
-            animator.SetBool("Run", true); // Trigger Run animation
         }
         else if (hInput < 0)
         {
             spriteRenderer.flipX = true; // Facing left
-            animator.SetBool("Run", true); // Trigger Run animation
         }
-        else 
+
+        // Update animation states
+        if (Mathf.Abs(joystick.Horizontal) > movementThreshold) // Check joystick input directly
         {
-            animator.SetBool("Run", false); // Trigger Idle animation
+            animator.SetBool("IsRunning", true); // Trigger Run animation
         }
+        else
+        {
+            animator.SetBool("IsRunning", false); // Trigger Idle animation
+        }
+
         // Jumping
         if (joystick.Vertical > 0.5f && isGrounded) // Jump only if the joystick is pushed upwards and the player is grounded
         {
