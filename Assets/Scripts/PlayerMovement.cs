@@ -10,10 +10,12 @@ public class PlayerMovement : MonoBehaviour
     private bool isGrounded = true; // To check if the player is on the ground
 
     private Rigidbody2D rb;
+    private SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D component
+        spriteRenderer = GetComponent<SpriteRenderer>(); // Get the SpriteRenderer component
     }
 
     private void FixedUpdate()
@@ -21,6 +23,16 @@ public class PlayerMovement : MonoBehaviour
         // Horizontal movement
         float hInput = joystick.Horizontal * moveSpeed;
         rb.velocity = new Vector2(hInput, rb.velocity.y); // Apply horizontal movement
+
+        // Flip the sprite based on horizontal movement
+        if (hInput > 0)
+        {
+            spriteRenderer.flipX = false; // Facing right
+        }
+        else if (hInput < 0)
+        {
+            spriteRenderer.flipX = true; // Facing left
+        }
 
         // Jumping
         if (joystick.Vertical > 0.5f && isGrounded) // Jump only if the joystick is pushed upwards and the player is grounded
